@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/arashrasoulzadeh/controll/issues"
   },
-  "homepage": "https://github.com/arashrasoulzadeh/controll#readme"
+  "homepage": "https://github.com/arashrasoulzadeh/controll#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
