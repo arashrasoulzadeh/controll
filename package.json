@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/arashrasoulzadeh/controll#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "express": "^4.17.1",
     "log-timestamp": "^0.3.0",
     "socket.io": "^2.3.0",

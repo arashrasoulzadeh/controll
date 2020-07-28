@@ -6,7 +6,11 @@
             "ip": "127.0.0.1",
             "health": {
                 "readiness": {
-
+                    "type": "http",
+                    "expected": 200,
+                    "method": "GET",
+                    "url": "http://localhost:8000",
+                    "per": "1000"
                 }
             },
             "jobs": [{

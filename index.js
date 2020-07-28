@@ -2,9 +2,11 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 const fs = require('fs');
+var probes = null;
 const {
     v4: uuidv4
 } = require('uuid');
+const axios = require('axios');
 
 require('log-timestamp');
 
@@ -16,6 +18,9 @@ const {
 const {
     time
 } = require('console');
+const {
+    checkServerIdentity
+} = require('tls');
 
 
 
@@ -33,16 +38,11 @@ function watchFile(file, callback) {
 }
 
 function send(socket, name, object) {
-    console.log("sending to channel => " + name)
-    console.log(object)
     socket.emit(name, object);
-    console.log("send completed.")
 }
 
 function broadcast(channel, object) {
-    console.log("broadcasting to channel", channel)
     io.emit(channel, object);
-    console.log("broadcast completed.")
 }
 
 function notify(socket, type, message) {
@@ -74,9 +74,59 @@ function findJobById(id) {
     return job_object;
 }
 
+function broadCastReadiness(status, server) {
+    broadcast("readiness", {
+        "type": "not_ready",
+        "server_id": server.id,
+        "message": status
+    })
+}
 
+
+function checkReadiness(server) {
+    probe = server.health.readiness;
+    switch (probe.type) {
+        case "http":
+            axios.get(probe.url)
+                .then(response => {
+                    if (response.status = probe.expected) {
+                        broadCastReadiness(true, server);
+
+                    } else {
+                        broadCastReadiness(false, server);
+                    }
+
+                })
+                .catch(error => {
+                    broadCastReadiness(false, server);
+                });
+
+            break;
+    }
+}
+
+function addReadinessProbe(server) {
+    probe = server.health.readiness;
+    console.log("readiness probe registered:", server.name)
+
+    func = setInterval(() => {
+        job = checkReadiness(server);
+    }, probe.per);
+
+    this.probes.readiness.push(func);
+    // console.log(func);
+}
+
+
+function reset() {
+    this.probes = {
+        "readiness": [],
+        "liveness": []
+    }
+}
 
 function reloadModules() {
+    reset();
     let rawdata = fs.readFileSync('modules.json');
     modules = JSON.parse(rawdata);
     rawdata = fs.readFileSync('jobs.json');
@@ -89,16 +139,18 @@ function reloadModules() {
         data.id = uuidv4();
         data.servers.forEach(function (server, index) {
             server.id = uuidv4();
+            if (server.health && server.health.readiness) {
+                addReadinessProbe(server);
+            }
             server.jobs.forEach(function (job, index) {
                 job.id = uuidv4();
                 job.server_id = server.id;
             });
         });
     });
-    console.log(modules)
 
     broadcast("modules", modules);
-    console.log("total of", modules.length, "modules loaded!")
+    console.log("total of", modules.active.length, "modules loaded!")
 }
 
 io.on('connection', (socket) => {

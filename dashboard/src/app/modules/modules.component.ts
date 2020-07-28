@@ -15,6 +15,7 @@ export class ModulesComponent implements OnInit {
   meta_id = null;
   server_logs = [];
   job_logs = []
+  readiness_status = [];
   ngOnInit(): void {
   }
 
@@ -23,11 +24,17 @@ export class ModulesComponent implements OnInit {
     this.current = null;
     this.server_logs = [];
     this.job_logs = [];
+    this.readiness_status = [];
     this.toastr.success('reloaded from server', 'modules');
   }
 
   constructor(private ws: WebsocketService, private toastr: ToastrService) {
     ws.send("modules", "get");
+    ws.getMessages("readiness").subscribe((message) => {
+
+      this.readiness_status[message.server_id] = message.message;
+    });
+
     ws.getMessages("modules").subscribe((message) => {
       if (this.meta_id != message.meta.id) {
         this.reset()
@@ -77,6 +84,10 @@ export class ModulesComponent implements OnInit {
     });
 
 
+  }
+
+  readiness(server_id) {
+    return this.readiness_status[server_id];
   }
 
   getOutput(server_id) {
