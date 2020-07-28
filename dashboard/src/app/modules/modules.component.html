@@ -1,0 +1,29 @@
+ <ul class="nav justify-content-center" *ngIf="modules_list!=null">
+   <li class="nav-item" *ngFor="let module of modules_list.active">
+     <a class="nav-link active" href="#" (click)="setCurrent(module)">{{module.name}}</a>
+   </li>
+ </ul>
+ <div *ngIf="current!=null">
+   <div class="card" *ngFor="let server of current.servers">
+     <h5 class="card-header">{{current.name}}</h5>
+     <div class="card-body">
+       <h5 class="card-title">Module Status</h5>
+       <p class="card-text">Server : {{server.name}}</p>
+
+       <span *ngFor="let job of server.jobs">
+         <button type="button" class="btn btn-secondary" (click)="runJob(job.id,server.id)">{{job.name}}</button>
+       </span>
+       <br><br>
+       Terminals :
+       <select (change)="loadTerminal($event.target.value,server.id)">
+         <option *ngFor="let job of server.jobs" value="{{job.id}}">
+           {{job.name}}
+         </option>
+       </select>
+       <br><br>
+       <textarea class="terminal">
+        {{getOutput(server.id)}}
+      </textarea>
+     </div>
+   </div>
+ </div>

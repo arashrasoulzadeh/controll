@@ -1,13 +1,24 @@
-[{
+{
+    "active": [{
         "name": "php",
-        "servers": [
-            1, 2
-        ]
-    },
-    {
+        "servers": [{
+            "name": "backend",
+            "ip": "127.0.0.1",
+            "jobs": [{
+                "name": "server1_php_start",
+                "label": "start"
+            }, {
+                "name": "server1_php_log",
+                "label": "log"
+            }]
+
+        }]
+    }, {
         "name": "nginx",
         "servers": [
-            1
+
         ]
-    }
-]
+    }],
+    "meta": {}
+
+}

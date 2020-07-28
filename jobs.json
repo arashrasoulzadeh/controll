@@ -1,0 +1,4 @@
+{
+    "server1_php_start": "ls",
+    "server1_php_log": "tail -n 30 /var/log/system.log"
+}
