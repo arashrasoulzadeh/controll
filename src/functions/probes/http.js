@@ -6,7 +6,9 @@ const probe = function () {
     this.args = [];
     this.server = null;
     this.check = function () {
-        axios.get(this.args[0])
+        axios.get(this.args[0], {
+                timeout: 100
+            })
             .then(response => {
                 if (response.status == this.expected) {
                     health.broadCastReadiness(true, this.server);
