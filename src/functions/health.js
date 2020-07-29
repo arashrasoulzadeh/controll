@@ -1,10 +1,9 @@
-const axios = require('axios');
 const socketio = require('./socket')
+const httpProbe = require('./probes/http')
 
 function broadCastReadiness(status, server) {
 
     socketio.broadcast("readiness", {
-        "type": "not_ready",
         "server_id": server.id,
         "message": status
     })
@@ -12,24 +11,14 @@ function broadCastReadiness(status, server) {
 
 
 function checkReadiness(server) {
-    probe = server.health.readiness;
+    probe_config = server.health.readiness;
     switch (probe.type) {
         case "http":
-            axios.get(probe.url)
-                .then(response => {
-                    if (response.status = probe.expected) {
-                        broadCastReadiness(true, server);
-
-                    } else {
-                        broadCastReadiness(false, server);
-                    }
-
-                })
-                .catch(error => {
-                    broadCastReadiness(false, server);
-                });
-
-            break;
+            probe = new httpProbe.probe()
+            probe.args = [probe_config.url]
+            probe.server = server
+            probe.expected = probe_config.expected
+            probe.check();
     }
 }
 
@@ -46,3 +35,4 @@ function addReadinessProbe(server) {
 }
 
 module.exports.addReadinessProbe = addReadinessProbe
+module.exports.broadCastReadiness = broadCastReadiness

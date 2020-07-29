@@ -31,7 +31,7 @@ export class ModulesComponent implements OnInit {
   constructor(private ws: WebsocketService, private toastr: ToastrService) {
     ws.send("modules", "get");
     ws.getMessages("readiness").subscribe((message) => {
-
+      console.log(message)
       this.readiness_status[message.server_id] = message.message;
     });
 
