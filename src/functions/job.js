@@ -10,7 +10,12 @@ const {
 const {
     checkServerIdentity
 } = require('tls');
-
+/**
+ * format job output    
+ * @param {string} job_id 
+ * @param {string} server_id 
+ * @param {string} output 
+ */
 function jobOutput(job_id, server_id, output) {
     return {
         "id": job_id,
@@ -18,7 +23,11 @@ function jobOutput(job_id, server_id, output) {
         "output": output
     }
 }
-
+/**
+ * find a job by id
+ * @param {object} modules 
+ * @param {string} id 
+ */
 function findJobById(modules, id) {
     job_object = null;
     modules.active.forEach(function (data, index) {
@@ -32,11 +41,18 @@ function findJobById(modules, id) {
     });
     return job_object;
 }
-
+/**
+ * setter for jobs 
+ * @param {object} new_jobs 
+ */
 function setJobs(new_jobs) {
     jobs = new_jobs;
 }
-
+/**
+ * handle a job requrested by clients   
+ * @param {object} modules 
+ * @param {object} msg 
+ */
 function handle(modules, msg) {
     current_job = findJobById(modules, msg.job_id);
     if (current_job == null) {

@@ -7,7 +7,9 @@ const {
 } = require('uuid');
 var modules = [];
 
-
+/**
+ * reload modules from the file 
+ */
 function reloadModules() {
     let rawdata = fs.readFileSync('modules.json');
     modules = JSON.parse(rawdata);
@@ -24,6 +26,9 @@ function reloadModules() {
             if (server.health && server.health.readiness) {
                 health.addReadinessProbe(server);
             }
+            if (server.health && server.health.liveness) {
+                health.addLivenessProbe(server);
+            }
             server.jobs.forEach(function (job, index) {
                 job.id = uuidv4();
                 job.server_id = server.id;
@@ -34,9 +39,10 @@ function reloadModules() {
     socketio.broadcast("modules", modules);
     console.log("total of", modules.active.length, "modules loaded!")
 }
-
+/**
+ * getter for modules 
+ */
 function getModules() {
-
     return modules;
 }
 

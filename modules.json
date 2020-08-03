@@ -11,6 +11,11 @@
                     "method": "GET",
                     "url": "http://localhost:8000",
                     "per": "1000"
+                },
+                "liveness": {
+                    "type": "ping",
+                    "ip": "1.2.4.5",
+                    "per": 2000
                 }
             },
             "jobs": [{

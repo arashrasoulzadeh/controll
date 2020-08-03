@@ -3,7 +3,9 @@ const file = require('./src/functions/file');
 const job = require('./src/functions/job');
 const modules = require('./src/functions/modules');
 const io = socketio.io
-
+/**
+ * reset the server memory
+ */
 function reset() {
     this.probes = {
         "readiness": [],
@@ -12,7 +14,9 @@ function reset() {
     modules.reloadModules()
 }
 
-
+/**
+ * monitor websocket connection , here is the router for all user requests
+ */
 io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('disconnect', () => {
@@ -28,6 +32,8 @@ io.on('connection', (socket) => {
 });
 
 
+/** we watch for file changes in both modules and jobs */
 file.watchFile('modules.json', reset)
 file.watchFile('jobs.json', reset)
+/** and reaload the modules for first time */
 modules.reloadModules()
