@@ -1,7 +1,7 @@
 # index
 - [Description](#description)
 - [Development](#development) 
-- [Changelog](CHANGELOG)
+- [Changelog](CHANGELOG.MD)
 
 # Description 
 Controll is a `under-development` bare-metal server controller, it launches a websocket server on client and has a simple ui to controll the server with websocket.
