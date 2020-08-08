@@ -18,11 +18,14 @@
   },
   "homepage": "https://github.com/arashrasoulzadeh/controll#readme",
   "dependencies": {
+    "autossh": "^0.2.0",
     "axios": "^0.19.2",
     "express": "^4.17.1",
     "log-timestamp": "^0.3.0",
+    "nodemon": "^2.0.4",
     "ping": "^0.2.3",
     "socket.io": "^2.3.0",
+    "ssh2": "^0.8.9",
     "uuid": "^8.2.0"
   }
 }

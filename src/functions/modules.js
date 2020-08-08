@@ -2,6 +2,13 @@ const fs = require('fs');
 const socketio = require('./socket')
 const job = require('./job');
 const health = require("./health")
+const ssh = require("./ssh")
+
+
+
+
+
+
 const {
     v4: uuidv4
 } = require('uuid');
@@ -23,6 +30,8 @@ function reloadModules() {
         data.id = uuidv4();
         data.servers.forEach(function (server, index) {
             server.id = uuidv4();
+            // server.tunnel = ssh.tunnel(server.ssh);
+            console.log(server.tunnel)
             if (server.health && server.health.readiness) {
                 health.addReadinessProbe(server);
             }

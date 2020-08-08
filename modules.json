@@ -4,6 +4,11 @@
         "servers": [{
             "name": "backend",
             "ip": "127.0.0.1",
+            "ssh": {
+                "host": "212.33.197.42",
+                "username": "root",
+                "remotePort": 1313
+            },
             "health": {
                 "readiness": {
                     "type": "http",
